@@ -14,6 +14,7 @@ module.exports = {
     publicPath: '/dist/',
     filename: 'build.js'
   },
+  target: "electron-renderer",
   module: {
     rules: [
       {

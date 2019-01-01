@@ -1,8 +1,12 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {mutationTypes, actionTypes, playModes} from '../assets/js/constants';
+import {mutationTypes, actionTypes, playModes, dirs} from '../assets/js/constants';
+import {DataStore, Fetch} from './dbHandler';
 // play sequences based on playModes
 import playlists from './playlists';
+
+const songsDB = new DataStore("songs.db");
+const fetch = new Fetch();
 
 Vue.use(Vuex);
 const store = new Vuex.Store({
@@ -106,15 +110,31 @@ const store = new Vuex.Store({
       }
     },
     actions: {
-      async [actionTypes.GET_SONGS_FROM_SERVER] ({state}) {
-        let data = await APIHandler.getSongs();
-        state.songs = JSON.parse(data).songs;
+      // async [actionTypes.GET_SONGS_FROM_SERVER] ({state}) {
+      //   let data = await APIHandler.getSongs();
+      //   state.songs = JSON.parse(data).songs;
+      //   console.log(state.songs);
+      //   playlists.init(state.songs);
+      //   // console.log(data.songs[0].album);
+      // },
+      async [actionTypes.GET_SONGS_FROM_DB] () {
+        return await songsDB.getAllRecords();
+      },
+      async [actionTypes.GET_SONGS_FROM_SYSTEM] () {
+        return await fetch.getSongsFrom([dirs.downloadsDir, dirs.musicDir]);
+      },
+      async [actionTypes.GET_SONGS] ({ dispatch, state }) {
+        // await dispatch(actionTypes.GET_SONGS_FROM_SERVER)
+        let songs = await dispatch(actionTypes.GET_SONGS_FROM_DB);
+        if(!songs.length) {
+          // find songs in system
+          songs = await dispatch(actionTypes.GET_SONGS_FROM_SYSTEM);
+          // add to songs DB
+          await songsDB.insert(songs);
+        }
+        state.songs = songs;
         console.log(state.songs);
         playlists.init(state.songs);
-        // console.log(data.songs[0].album);
-      },
-      async [actionTypes.GET_SONGS] ({ dispatch }) {
-        await dispatch(actionTypes.GET_SONGS_FROM_SERVER)
       },
       async [actionTypes.GET_ALBUMS_FROM_SERVER]({state}) {
         let data = await APIHandler.getAlbums();

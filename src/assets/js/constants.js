@@ -1,8 +1,20 @@
+const path = require("path");
+
 const sideNavContent = {
     upload: { title: 'Upload', icon: 'file_upload' },
     profile: { title: 'Profile', icon: 'account_box'},
-    filesUploading: { title: 'Files Uploading', icon: 'cloud_upload' }
+    filesUploading: { title: 'Files Uploading', icon: 'cloud_upload' },
+    playlists: {title: 'Playlists', icon: 'list'},
+    settings: {title: 'Settings', icon: 'settings'}
 };
+
+let homeDir = process.env[(process.platform == 'win32') ? 'USERPROFILE' : 'HOME'];
+
+const dirs  = {
+    homeDir: homeDir,
+    downloadsDir: path.join(homeDir, "Downloads"),
+    musicDir: path.join(homeDir, "Music")
+}
 
 const mutationTypes = {
     CREATE_AUDIO_PLAYER_REFERENCE: 'createAudioPlayerReference',
@@ -32,6 +44,8 @@ const actionTypes = {
     GET_SONGS_FROM_SERVER: 'getSongsFromServer',
     GET_ALBUMS: 'getAlbums',
     GET_ALBUMS_FROM_SERVER: 'getaAlbumsFromServer',
+    GET_SONGS_FROM_DB: 'getSongsFromDB',
+    GET_SONGS_FROM_SYSTEM: 'getSongsFromSystem'
 }
 
 const AVIcons = {
@@ -96,5 +110,6 @@ export {
     AVIcons,
     playModes,
     stateProps,
-    KeyPress
+    KeyPress,
+    dirs
 }

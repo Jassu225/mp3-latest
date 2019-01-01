@@ -24,7 +24,7 @@
       <v-list class="pt-0" dense>
 
         <v-list-tile
-          @click="navigateToFileUpload()"
+          @click="navigateToFileUpload"
         >
           <v-list-tile-action>
             <v-icon>{{ items.upload.icon }}</v-icon>
@@ -58,6 +58,31 @@
           </v-list-tile-content>
         </v-list-tile>
 
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>{{ items.playlists.icon }}</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>{{ items.playlists.title }}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>{{ items.settings.icon }}</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+            <v-list-tile-title>{{ items.settings.title }}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+      <v-divider></v-divider>
+      <v-list>
+        <v-list-tile v-for="(item, index) in extras" :key="index">
+          <v-list-tile-title>{{item}}</v-list-tile-title>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
   </v-layout>
@@ -77,7 +102,8 @@ export default {
         return {
           items: sideNavContent,
           toggleDrawer: false,
-          usrImg: null
+          usrImg: null,
+          extras: ['About', 'Support', 'Donate Us']
         }
     },
     watch: {

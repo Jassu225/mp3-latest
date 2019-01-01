@@ -5,12 +5,12 @@
         :class="{noOpactiy: !Tabs}"
       >
         <v-tab-item class="full-height overflow">
-          <v-card flat color="transparent" dark>
+          <v-card flat color="transparent" dark class="full-height">
             <songs-container></songs-container>
           </v-card>
         </v-tab-item>
         <v-tab-item class="full-height overflow">
-          <v-card flat color="transparent" dark>
+          <v-card flat color="transparent" dark class="full-height">
             <album-container></album-container>
           </v-card>
         </v-tab-item>
@@ -69,13 +69,17 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .noOpactiy {
   opacity: 0;
 }
 
 .position-absolute {
   position: absolute;
+}
+
+.tabs .v-window__container {
+    height: 100%;
 }
 
 /* .tabs {

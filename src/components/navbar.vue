@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       menuItems: [
-        'Songs', 'Album', 'Artists', 'Playlists', 'About Us', 'Contact Us', 'Donate Us'
+        'Songs', 'Album', 'Artists'
       ]
     }
   },

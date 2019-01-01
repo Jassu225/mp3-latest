@@ -10,6 +10,8 @@ Vue.use(Vuetify);
 
 import 'vuetify/dist/vuetify.min.css';
 import './assets/css/MaterialIcons.css';
+import './assets/css/MontserratFont.css';
+import './assets/css/generic.css';
 
 new Vue({
     el: '#app',

@@ -88,9 +88,9 @@ export default {
         'playOrPause',
         'loadAudio'
     ],
-    mounted: function() {
-        console.log(song);
-    },
+    // mounted: function() {
+    //     console.log(song);
+    // },
     computed: {
         selected: function() {
             let selectedSong = this.$store.state.selectedSong;
@@ -168,7 +168,8 @@ export default {
         // bind VueReference
         this.song.VueReference = this;
         // bind song Src (URL)
-        this.song.src = `${this.config.apiRootURL + this.config.uploadsDir}/${this.song.title}`;
+        // this.song.src = `${this.config.apiRootURL + this.config.uploadsDir}/${this.song.title}`;
+        this.song.src = this.song.path;
         // console.log(this.song.src);
     }
 }
