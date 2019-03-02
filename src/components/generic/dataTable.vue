@@ -37,12 +37,12 @@ export default {
         return {
             start: 0,
             currentPage: 1,
-            totalCount: this.items.length
+            maxPerPage: parseInt(this.rowsPerPageNumber) >= this.items.length ? this.items.length: parseInt(this.rowsPerPageNumber)
         };
     },
     methods: {
         goToNextPage: function() {
-            if(this.end < this.totalCount)
+            if(this.end < this.items.length)
                 this.start = this.end;
         },
         goToPreviousPage: function() {
@@ -54,7 +54,7 @@ export default {
     computed: {
         end: {
             get: function() {
-                return this.start + parseInt(this.rowsPerPageNumber);
+                return this.start + this.maxPerPage;
             },
             set: function(newValue, oldValue) {
 

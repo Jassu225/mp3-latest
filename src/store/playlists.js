@@ -1,4 +1,8 @@
-import { playModes } from '../assets/js/constants';
+import { playModes, mutationTypes } from '../assets/js/constants';
+import  Song from './song';
+import store from '.';
+
+const Promise = require('bluebird');
 
 const playlists = {
     // props
@@ -15,12 +19,21 @@ const playlists = {
     shuffle: null,
     // ----------------------------------------------------------------------------------
     // initialization without which app may crash
-    init: function(songs) {
+    init: async function(songs) {
         this.sequenceLoopPlaylist.init(songs);
         // props initialization
         this.playMode = playModes.LOOP_ALL;
         this.selectedPlaylist = 'sequenceLoopPlaylist';
         this.shuffle =  false;
+        // attach functions to all songs
+        await Promise.map(songs, async (song, index) => {
+            songs[index] = new Song(song, index);
+        }, {concurrency: 500});
+        console.log(songs);
+        store.commit({
+            type:mutationTypes.SET_FORMATTED_SONGS,
+            payload: songs
+        });
     },
     setPlayMode: function(playMode) {
         // set playMode prop

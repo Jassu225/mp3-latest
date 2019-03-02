@@ -36,7 +36,9 @@ const mutationTypes = {
     // play Next Song action
     PLAY_NEXT: 'playNext',
     // key controls
-    MUTE_AUDIO: 'muteAudio'
+    MUTE_AUDIO: 'muteAudio',
+    // used to update songs in store after converting them to instances of Song class
+    SET_FORMATTED_SONGS: 'setFormattedSongs'
 }
 
 const actionTypes = {

@@ -159,7 +159,7 @@ export default {
     },
     audioEnded() {
       // for setting play icon in song-block
-      this.$store.state.selectedSong.VueReference.AudioEnded();
+      this.$store.state.selectedSong.ended();
 
       // set play icon in music-controls
       this.$store.state.musicControls.setPlayIcon();
@@ -174,14 +174,15 @@ export default {
     audioPaused() {
       if(!this.$refs.audioPlayer.ended) {
         // for setting play icon in song-block 
-        this.$store.state.selectedSong.VueReference.AudioPaused();
+        this.$store.state.selectedSong.paused();
 
         // set play icon in music-controls
         this.$store.state.musicControls.setPlayIcon();
       }
     },
     audioPlaying() {
-      this.$store.state.selectedSong.VueReference.AudioPlaying();
+      // console.log(this.$store.state.selectedSong.islaying);
+      this.$store.state.selectedSong.playing();
 
       // set play icon in music-controls
       this.$store.state.musicControls.setPauseIcon();

@@ -78,9 +78,9 @@ const store = new Vuex.Store({
         // make new Selection
         state.selectedSong = state.songs[SongIndex];
         // load Audio player with new selection source
-        state.selectedSong.VueReference.LoadAudio();
+        state.selectedSong.load();
         // play new Song
-        state.selectedSong.VueReference.playPauseSong();
+        state.selectedSong.playOrPause();
       },
       [mutationTypes.TOGGLE_SHUFFLE] (state) {
         playlists.toggleShuffle();
@@ -107,6 +107,10 @@ const store = new Vuex.Store({
         state.audioVolumesSelector = (state.audioVolumesSelector + 1) % state.audioVolumes.length;
         // mute / unmute
         state.audioPlayer.volume = state.audioVolumes[state.audioVolumesSelector];
+      },
+      [mutationTypes.SET_FORMATTED_SONGS] (state, {payload}) {
+        // console.log(payload);
+        state.songs = payload;
       }
     },
     actions: {
@@ -134,7 +138,7 @@ const store = new Vuex.Store({
         }
         state.songs = songs;
         console.log(state.songs);
-        playlists.init(state.songs);
+        await playlists.init(state.songs);
       },
       async [actionTypes.GET_ALBUMS_FROM_SERVER]({state}) {
         let data = await APIHandler.getAlbums();

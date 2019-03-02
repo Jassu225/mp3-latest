@@ -3,7 +3,7 @@
         <div class="song-title" :title="song.title">
             {{ song.title }}
         </div>
-        <div class="song-action" @click="playPauseSong()">
+        <div class="song-action" @click="song.playOrPause()">
             <!-- <v-icon title="play">{{ Icons[IconSelector] }}</v-icon> -->
             <material-icon title="play">{{ Icons[IconSelector] }}</material-icon>
         </div>
@@ -26,12 +26,6 @@
                 </v-list>
             </v-menu>
         </div>
-        <!-- <div class="song-action">
-            <material-icon title="Play Next">{{ AVIcons.playNext }}</material-icon>
-        </div>
-        <div class="song-action">
-            <material-icon title="Add to Playlist">{{ AVIcons.playlistAdd }}</material-icon>
-        </div> -->
         <div class="song-artists" :title="song.artists.toString()">
             {{song.artists.toString()}}
         </div>
@@ -73,31 +67,23 @@ export default {
             pauseIconIndex: 1,
             playPauseSelector: 0,
             isPlaying: false,
-            // More Actions
             moreActions: [ addItems.PLAY_NEXT, addItems.QUEUE, addItems.NEW_PLAYLIST]
         };
     },
     props: [
         'song', 
-        'songIndex',
         'pauseAudio', 
         'removeSelectedSong', 
-        'selectSong', 
         'playAudio', 
-        'isPaused', 
-        'playOrPause',
-        'loadAudio'
+        'isPaused',
     ],
-    // mounted: function() {
-    //     console.log(song);
-    // },
     computed: {
         selected: function() {
             let selectedSong = this.$store.state.selectedSong;
             return selectedSong && selectedSong._id == this.song._id;
         },
         IconSelector: function() {
-            if(this.selected && this.isPlaying)
+            if(this.selected && this.song.isPlaying)
                 return this.pauseIconIndex;
             else
                 return this.playIconIndex;
@@ -123,30 +109,6 @@ export default {
             `${seconds ? (seconds > 9 ? seconds: '0' + seconds) : '00'}`
             );
         },
-        playPauseSong() {
-
-            // STORE IN STORE
-            this.selectSong(this.song);
-            // play or pause
-            this.playOrPause();
-        },
-        // These fuctions were called
-        // from App.Vue when the respective
-        // event is fired.
-        AudioEnded() {
-            this.isPlaying = false;
-        },
-        AudioPaused() {
-            this.isPlaying = false;
-        },
-        AudioPlaying() {
-            this.isPlaying = true;
-        },
-        // this function may be called from store
-        // after selecting next song based on playMode
-        LoadAudio() {
-            this.loadAudio(this.song.src);
-        },
         actions(action) {
             switch(action) {
                 case addItems.PLAY_NEXT:
@@ -162,16 +124,19 @@ export default {
             }
         }
     },
-    mounted: function() {
-        // bind songIndex
-        this.song.index = this.songIndex;
-        // bind VueReference
-        this.song.VueReference = this;
-        // bind song Src (URL)
-        // this.song.src = `${this.config.apiRootURL + this.config.uploadsDir}/${this.song.title}`;
-        this.song.src = this.song.path;
-        // console.log(this.song.src);
-    }
+    // mounted: function() {
+    //     // bind songIndex
+    //     this.song.index = this.songIndex;
+    //     // bind VueReference
+    //     this.song.VueReference = this;
+    //     // bind song Src (URL)
+    //     // this.song.src = `${this.config.apiRootURL + this.config.uploadsDir}/${this.song.title}`;
+    //     this.song.src = this.song.path;
+    //     // console.log(this.song.src);
+    // }
+    // mounted: function() {
+    //     console.log(this.song);
+    // }
 }
 </script>
 

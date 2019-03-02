@@ -1,53 +1,19 @@
 <template>
     <div class="full-height">
-        <!-- Using Masonry (For grid-view) -->
-        <!-- <div v-if="songs && songs.length" v-masonry transition-duration="0.3s" item-selector=".item">
-            <div v-masonry-tile class="item" v-for="(song, index) in songs" :key="index">
-                <song-block :song="song"></song-block>
-            </div>
-        </div> -->
-        <!-- <audio ref="audioPlayer" class="hidden"></audio> -->
-        <!-- <div class="header">
-            <div class="textOverflowEllipsis">Title</div>
-            <div class="textOverflowEllipsis"></div>
-            <div class="textOverflowEllipsis"></div>
-            <div class="textOverflowEllipsis">Artists</div>
-            <div class="textOverflowEllipsis">Album</div>
-            <div class="textOverflowEllipsis">Genre</div>
-            <div class="textOverflowEllipsis">Time</div>
-        </div> -->
         <div v-if="songs && songs.length" class="songs-container fullWidth fullHeight">
-            <!-- <song-block 
-                v-for="(song, index) in songs" 
-                :key="index" 
-                :songIndex="index"
-                :song="song"
-                :pauseAudio="pauseAudio"
-                :isPaused="isPaused"
-                :removeSelectedSong="removeSelectedSong"
-                :selectSong="selectSong"
-                :playAudio="playAudio"
-                :playOrPause="playOrPause"
-                :loadAudio="loadAudio"
-            ></song-block> -->
             <data-table
                 :headers="songHeaders"
                 :items="songs"
-                rowsPerPageNumber=5
+                rowsPerPageNumber="200"
                 rowText="song"
             >
                 <song-block 
                     slot="content"
-                    slot-scope="songItem" 
-                    :songIndex="songItem.index"
+                    slot-scope="songItem"
                     :song="songItem.item"
-                    :pauseAudio="pauseAudio"
                     :isPaused="isPaused"
                     :removeSelectedSong="removeSelectedSong"
-                    :selectSong="selectSong"
                     :playAudio="playAudio"
-                    :playOrPause="playOrPause"
-                    :loadAudio="loadAudio"
                 ></song-block>
             </data-table>
         </div>
@@ -59,7 +25,6 @@
             <h1>No Songs found</h1>
             <div class="link">Show us where to look</div>
         </div>
-        <!-- <div class="footer"></div> -->
     </div>
 </template>
 
@@ -94,11 +59,6 @@ export default {
         }
     },
     methods: {
-        pauseAudio() {
-            if(!this.audioPlayer.paused)
-                this.audioPlayer.pause();
-            // console.log('pause audio');
-        },
         isPaused() {
             return this.audioPlayer.paused;
         },
@@ -106,45 +66,11 @@ export default {
             this.$store.commit(mutationTypes.REMOVE_SELECTED_SONG);
             // console.log('remove selected song');
         },
-        selectSong(song) {
-            
-            // if not same selection,
-            // 1 - make new selection,
-            // 2 - pause audio player,
-            // 3 - load the audio
-            // console.log(this.sameSelection(song));
-            if(!this.sameSelection(song)) {
-                // console.log('select new song');
-                this.$store.commit(mutationTypes.SELECT_SONG, {
-                    song
-                });
-                // pause Audio
-                this.pauseAudio();
-                // load Audio with new source
-                this.loadAudio(song.src);
-            }
-        },
+        
         playAudio() {
             this.audioPlayer.play();
         },
-        loadAudio(src) {
-            // console.log(src);
-            this.audioPlayer.src = src;
-            this.audioPlayer.load();
-        },
-        playOrPause() {
-            if(this.isPaused()) {
-                this.playAudio();
-            }
-            else {
-                this.pauseAudio();
-            }
-        },
-        sameSelection(song) {
-            // let previousSelection = this.$store.state.previousSelection;
-            let currentSelection = this.$store.state.selectedSong;
-            return currentSelection && song && currentSelection._id == song._id;
-        }
+        
     }
 }
 </script>
