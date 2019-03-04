@@ -8,9 +8,11 @@ var mm = require('music-metadata');
 
 try {
     // create DataStore dir
+    console.log("creating directory");
     fs.mkdirAsync(dataPath);
 } catch(ex) {
-    console.error(ex);
+    console.log(ex);
+    console.log("Directory already exists");
 }
 
 const audioExtensions = [
@@ -112,25 +114,29 @@ function Fetch() {
 
     let formatWithSongSchema = function(list) {
         let songs = [];
+        // console.log(list);
         list.forEach(file => {
             let song = Objects.song();
             let metaData = file.metadata;
             song.title = file.name;
             song.path = file.path;
-            song.album = metaData.common.album ? metaData.common.album : song.album;
-            song.albumartist = metaData.common.albumartist ? metaData.common.albumartist.split(',') : song.albumartist;
-            song.artists = metaData.common.artists ? metaData.common.artists: song.artists;
+            // console.log(file);
+            if(metaData) {
+                song.album = metaData.common.album ? metaData.common.album : song.album;
+                song.albumartist = metaData.common.albumartist ? metaData.common.albumartist.split(',') : song.albumartist;
+                song.artists = metaData.common.artists ? metaData.common.artists: song.artists;
 
-            let picture = metaData.common.picture;
-            song.cover = ( (picture && picture[0].data) ? `data:${picture[0].format};base64,${picture[0].data.toString('base64')}`: song.cover);
-            song.disk.no = metaData.common.disk ? metaData.common.disk.no : song.disk.no;
-            song.disk.of = metaData.common.disk ? metaData.common.disk.of : song.disk.of;
-            song.duration = metaData.format.duration ? metaData.format.duration : song.duration;
-            song.extension = file.ext;
-            song.genre = metaData.common.genre ? metaData.common.genre : song.genre;
-            song.track.no = metaData.common.track ? metaData.common.track.no : song.track.no;
-            song.track.of = metaData.common.track ? metaData.common.track.of : song.track.of;
-            song.year = metaData.common.year ? metaData.common.year : song.year;
+                let picture = metaData.common.picture;
+                song.cover = ( (picture && picture[0].data) ? `data:${picture[0].format};base64,${picture[0].data.toString('base64')}`: song.cover);
+                song.disk.no = metaData.common.disk ? metaData.common.disk.no : song.disk.no;
+                song.disk.of = metaData.common.disk ? metaData.common.disk.of : song.disk.of;
+                song.duration = metaData.format.duration ? metaData.format.duration : song.duration;
+                song.extension = file.ext;
+                song.genre = metaData.common.genre ? metaData.common.genre : song.genre;
+                song.track.no = metaData.common.track ? metaData.common.track.no : song.track.no;
+                song.track.of = metaData.common.track ? metaData.common.track.of : song.track.of;
+                song.year = metaData.common.year ? metaData.common.year : song.year;
+            }
 
             songs.push(song);
         });

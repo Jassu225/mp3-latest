@@ -13,7 +13,7 @@ function pauseAudio() {
 
 function loadAudio(src) {
     let audioPlayer = getAudioPlayer();
-    audioPlayer.src = src;
+    audioPlayer.src = "file://" + src;
     audioPlayer.load();
 }
 
@@ -79,7 +79,8 @@ Song.prototype.load = function() {
 Song.prototype.sameSelection = function() {
     let song = this;
     let currentSelection = store.state.selectedSong;
-    return currentSelection && song && currentSelection._id == song._id;
+    // return currentSelection && song && currentSelection._id == song._id;
+    return currentSelection && song && currentSelection.index == song.index;
 }
 
 Song.prototype.select = function() {

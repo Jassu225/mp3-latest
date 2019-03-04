@@ -109,7 +109,7 @@ const store = new Vuex.Store({
         state.audioPlayer.volume = state.audioVolumes[state.audioVolumesSelector];
       },
       [mutationTypes.SET_FORMATTED_SONGS] (state, {payload}) {
-        // console.log(payload);
+        console.log(payload);
         state.songs = payload;
       }
     },
@@ -134,11 +134,11 @@ const store = new Vuex.Store({
           // find songs in system
           songs = await dispatch(actionTypes.GET_SONGS_FROM_SYSTEM);
           // add to songs DB
-          await songsDB.insert(songs);
+          songs = await songsDB.insert(songs);
         }
-        state.songs = songs;
-        console.log(state.songs);
-        await playlists.init(state.songs);
+        // state.songs = songs;
+        // console.log(state.songs);
+        await playlists.init(songs);
       },
       async [actionTypes.GET_ALBUMS_FROM_SERVER]({state}) {
         let data = await APIHandler.getAlbums();

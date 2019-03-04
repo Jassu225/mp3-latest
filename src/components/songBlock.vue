@@ -80,7 +80,8 @@ export default {
     computed: {
         selected: function() {
             let selectedSong = this.$store.state.selectedSong;
-            return selectedSong && selectedSong._id == this.song._id;
+            // return selectedSong && selectedSong._id == this.song._id;
+            return selectedSong && selectedSong.index == this.song.index;
         },
         IconSelector: function() {
             if(this.selected && this.song.isPlaying)
