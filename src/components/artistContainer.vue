@@ -1,37 +1,37 @@
 <template>
     <div class="full-height">
-        <div v-if="albums && albums.length" class="albums-container grid">
-            <album-block 
-                v-for="(album, index) in albums" 
+        <div v-if="artists && artists.length" class="artists-container grid">
+            <artist-block 
+                v-for="(artist, index) in artists" 
                 :key="index" 
-                :albumIndex="index"
-                :album="album"
-            ></album-block>
+                :artistIndex="index"
+                :artist="artist"
+            ></artist-block>
         </div>
         <div v-else class="full-width full-height flexContainer \
             centerItemsVertically centerItemsHorizontally">
-            <h1>No Albums</h1>
+            <h1>No Artists Found</h1>
         </div>
     </div>
 </template>
 
 <script>
-import albumBlock from './albumBlock.vue';
+import artistBlock from './artistBlock.vue';
 
 export default {
     components: {
-        albumBlock
+        artistBlock
     },
     computed: {
-        albums: function() {
-            return this.$store.state.albums;
+        artists: function() {
+            return this.$store.state.artists;
         }
     }
 }
 </script>
 
 <style>
-.albums-container {
+.artists-container {
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     padding: 10px;
     grid-gap: 15px;

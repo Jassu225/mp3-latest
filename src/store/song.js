@@ -1,5 +1,6 @@
 import store from '../store';
 import {mutationTypes} from '../assets/js/constants';
+const _ = require('lodash');
 
 function getAudioPlayer() {
     return store.state.audioPlayer;
@@ -27,13 +28,14 @@ function playOrPauseAudio() {
     }
 }
 
-export default function Song(songFromDB, index) {
+//#region song
+function Song(songFromDB, index) {
     for(let prop in songFromDB ) {
         if(songFromDB.hasOwnProperty(prop))
             this[prop] = songFromDB[prop];
     }
     this.isPlaying = false;
-    this.index = index;
+    // this.index = index;
 }
 
 Song.prototype.playOrPause = function() {
@@ -61,21 +63,6 @@ Song.prototype.load = function() {
     loadAudio(this.path);
 }
 
-// Song.prototype.actions = function(action) {
-//     switch(action) {
-//         case addItems.PLAY_NEXT:
-//             // console.log('play Next');
-//             store.commit( mutationTypes.PLAY_NEXT, {
-//                 songID: this.song._id
-//             });
-//             break;
-//         case addItems.QUEUE:
-//             break;
-//         case addItems.NEW_PLAYLIST:
-//             break;
-//     }
-// }
-
 Song.prototype.sameSelection = function() {
     let song = this;
     let currentSelection = store.state.selectedSong;
@@ -83,8 +70,14 @@ Song.prototype.sameSelection = function() {
     return currentSelection && song && currentSelection.index == song.index;
 }
 
-Song.prototype.select = function() {
+Song.prototype.existsInCurrentPlaylist = function() {
     let song = this;
+    let playlist = store.state.playlists.selectedPlaylist;
+    return playlist && song && playlist.contains(song);
+}
+
+Song.prototype.select = function() {
+    // let song = this;
     // if not same selection,
     // 1 - make new selection,
     // 2 - pause audio player,
@@ -92,32 +85,106 @@ Song.prototype.select = function() {
     // console.log(this.sameSelection(song));
     if(!this.sameSelection()) {
         // console.log('select new song');
+        if(!this.existsInCurrentPlaylist()) {
+            store.commit({
+                type: mutationTypes.SET_PLAYLIST,
+                payload: store.state.playlists.exhaustiveList
+            });
+        }
+
         store.commit(mutationTypes.SELECT_SONG, {
-            song
+            song: this
         });
         // pause Audio
         pauseAudio();
         // load Audio with new source
-        loadAudio(song.path);
+        // loadAudio(song.path);
+        this.load();
+    }
+}
+//#endregion
+
+//#region album
+function Album(albumFromDB,index) {
+    for(let prop in albumFromDB ) {
+        if(albumFromDB.hasOwnProperty(prop))
+            this[prop] = albumFromDB[prop];
+    }
+    this.isPlaying = false;
+    // this.index = index;
+}
+
+Album.prototype.alreadySelected = function() {
+    return this && store.state.selectedAlbum && this._id == store.state.selectedAlbum._id;
+}
+
+Album.prototype.select = function() {
+    // debugger;
+    if(!this.alreadySelected()) {
+        store.commit(mutationTypes.SELECT_ALBUM, {
+            album: this
+        });
+    }
+    // pause Audio
+    pauseAudio();
+    // debugger;
+    // load Audio with new source
+    let song = _.find(store.state.songs, { index: this.songsList[0].index });
+    if(song) {
+        song.load();
+        song.playOrPause();
+    } else {
+        console.error("song not found");
     }
 }
 
-// Song.prototype.getReadableTime = function(duration) {
-//     let seconds = duration, minutes = 0, hours = 0;
-//     while(seconds > 60) {
-//         minutes ++;
-//         seconds -= 60;
-//     }
-//     while(minutes > 60) {
-//         hours ++;
-//         minutes -= 60;
-//     }
+Album.prototype.play = function() {
+    // console.log('playing album');
+    this.select();
+    // playOrPauseAudio();
+}
+//#endregion
 
-//     seconds = Math.round(seconds);
+//#region artist
+function Artist(artistFromDB,index) {
+    for(let prop in artistFromDB ) {
+        if(artistFromDB.hasOwnProperty(prop))
+            this[prop] = artistFromDB[prop];
+    }
+    this.isPlaying = false;
+    // this.index = index;
+}
 
-//     return ( 
-//     `${hours ? hours + ':' : ''}` +
-//     `${minutes ? (hours ? (minutes >= 10 ? minutes : '0' + minutes) : minutes) : '0'}:` +
-//     `${seconds ? (seconds > 9 ? seconds: '0' + seconds) : '00'}`
-//     );
-// }
+Artist.prototype.alreadySelected = function() {
+    return this && store.state.selectedArtist && this._id == store.state.selectedArtist._id;
+}
+
+Artist.prototype.select = function() {
+    // debugger;
+    if(!this.alreadySelected()) {
+        store.commit(mutationTypes.SELECT_ARTIST, {
+            artist: this
+        });
+    }
+    // pause Audio
+    pauseAudio();
+    // debugger;
+    // load Audio with new source
+    let song = _.find(store.state.songs, { index: this.songsList[0].index });
+    if(song) {
+        song.load();
+        song.playOrPause();
+    } else {
+        console.error("song not found");
+    }
+}
+
+Artist.prototype.play = function() {
+    this.select();
+    // playOrPauseAudio();
+}
+//#endregion
+
+export {
+    Song, Album, Artist
+}

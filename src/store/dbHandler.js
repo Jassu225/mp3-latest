@@ -4,7 +4,13 @@ const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 const Datastore = require('nedb');
 const dataPath = path.join(getPath('userData'),"DataStore");
-var mm = require('music-metadata');
+const mm = require('music-metadata');
+import {images} from '../assets/js/constants.js';
+let defaultSongCover = images.defaultSongCover, 
+defaultAlbumCover = images.defaultAlbumCover,
+defaultArtistCover = images.defaultArtistCover;
+const _ = require('lodash');
+
 
 try {
     // create DataStore dir
@@ -32,7 +38,7 @@ const Objects = {
         album: 'unknown',
         albumartist: ['unknown'],
         artists: ['unknown'],
-        cover: '/dist/defaultCover.png',
+        cover: defaultSongCover,
         disk: {
             no: -1,
             of: -1
@@ -40,6 +46,7 @@ const Objects = {
         duration: -1,
         extension: '',
         genre: ['unknown'],
+        index: -1,
         path: 'unknown',
         playCount: 0,
         title: 'unknown',
@@ -53,14 +60,29 @@ const Objects = {
     album: function() {
       return {
         artists: ['unknown'],
-        cover: '/dist/defaultCover.png',
+        cover: defaultAlbumCover,
         duration: 0,
+        index: -1,
         songsList: [],
         title: 'unknown',
         tracks: 0,
-        year: 'unknown'
+        year: 'unknown',
+        playCount: 0
       }
-    }
+    },
+    artist: function() {
+        return {
+        //   artists: ['unknown'],
+          cover: defaultArtistCover,
+          duration: 0,
+          index: -1,
+          songsList: [],
+          title: 'unknown',
+          tracks: 0,
+        //   year: 'unknown',
+          playCount: 0
+        }
+      }
   };
 
 function DataStore(dbNameWithExt) {
@@ -88,38 +110,83 @@ function DataStore(dbNameWithExt) {
 }
 
 function Fetch() {
-    let formatWithAlbumSchema = async function (songs) {
-        let album = await DBHandler.findAlbum(metaData.common.album ? metaData.common.album : 'unknown');
-        // console.log(album);
-        if(album) {
-            album.songsList.push(fileName);
-            // atrists concatenation not working
-            metaData.common.artists ? album.artists.concat(metaData.common.artists): null;
-            metaData.format.duration ? album.duration +=  metaData.format.duration : currentSong.duration;
-            album.tracks++;
-            await DBHandler.updateAlbum(album);
-        } else {
-            album = Objects.album();
-            album.artists =  metaData.common.artists ? metaData.common.artists: album.artists;
-            let picture = metaData.common.picture;
-            album.cover =  ( (picture && picture[0].data) ? `data:${picture[0].format};base64,${picture[0].data.toString('base64')}`: album.cover);
-            album.duration =  metaData.format.duration ? metaData.format.duration : album.duration;
-            album.songsList.push(fileName);
-            album.title = metaData.common.album ? metaData.common.album : album.title;
-            album.tracks++;
-            album.year = metaData.common.year ? metaData.common.year : album.year;
-            await DBHandler.addAlbum(album);
-        }
+    let formatWithArtistSchema = function (songs) {
+        let artists = [];
+        songs.forEach((song,index) => {
+            let someArtists = _.filter(artists,artist => song.artists.includes(artist.title));
+            if(someArtists.length) {
+                for(let i = 0; i < someArtists.length; i++) {
+                    let artist = someArtists[i];
+                    artist.songsList.push({
+                        path: song.path,
+                        index
+                    });
+                    if (song.duration) artist.duration +=  song.duration;
+                    artist.tracks++;
+                }
+            } else {
+                for(let i = 0; i < song.artists.length; i++) {
+                    let artist = Objects.artist();
+                    artist.title = song.artists[i];
+                    // album.cover = album.cover == defaultAlbumCover && song.cover != defaultSongCover ? song.cover : album.cover;
+                    artist.duration = song.duration;
+                    artist.songsList.push({
+                        path: song.path,
+                        index
+                    });
+                    artist.tracks++;
+                    artist.index = artists.length;
+                    artists.push(artist);
+                }
+            }
+        });
+        return artists;
+    }
+
+    let formatWithAlbumSchema = function (songs) {
+        let albums = [];
+        songs.forEach((song,index) => {
+            let album = albums.find(album => album.title == song.album);
+            // console.log(album);
+            if(album) {
+                album.songsList.push({
+                    path: song.path,
+                    index
+                });
+                // atrists concatenation not working
+                if (song.artists) album.artists = album.artists.concat(song.artists);
+                if (song.duration) album.duration +=  song.duration;
+                album.tracks++;
+                // await DBHandler.updateAlbum(album);
+            } else {
+                album = Objects.album();
+                album.artists =  song.artists;
+                album.cover = album.cover == defaultAlbumCover && song.cover != defaultSongCover ? song.cover : album.cover;
+                album.duration = song.duration;
+                album.songsList.push({
+                    path: song.path,
+                    index
+                });
+                album.title = song.album;
+                album.tracks++;
+                album.year = song.year;
+                album.index = albums.length;
+                // await DBHandler.addAlbum(album);
+                albums.push(album);
+            }
+        });
+        return albums;
     }
 
     let formatWithSongSchema = function(list) {
         let songs = [];
         // console.log(list);
-        list.forEach(file => {
+        list.forEach((file, index) => {
             let song = Objects.song();
             let metaData = file.metadata;
             song.title = file.name;
             song.path = file.path;
+            song.index = index;
             // console.log(file);
             if(metaData) {
                 song.album = metaData.common.album ? metaData.common.album : song.album;
@@ -197,8 +264,11 @@ function Fetch() {
         let songsListWithMetadata = await extractMetadata(songsList);
         // console.log(songsListWithMetadata);
         let songs = formatWithSongSchema(songsListWithMetadata);
+        let albums = formatWithAlbumSchema(songs);
+        let artists = formatWithArtistSchema(songs);
         // console.log(songs);
-        return songs;
+        // formatSongsAndAlbums(songs, albums);
+        return [songs, albums, artists];
     }
 }
 

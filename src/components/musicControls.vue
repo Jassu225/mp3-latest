@@ -12,14 +12,20 @@
             <div class="time">{{ getReadableTime(duration) }}</div>
         </div>
         <div class="controlsContainer grid">
+          <div class="selectedSong">
+            <div class="imageContainer" :style="{'background-image': 'url(' + selectedSongAlbumImage + ')'}">
+              <!-- <img :src="selectedSongAlbumImage"/> -->
+            </div>
+            <div class="selectedSongInfo" v-if="selectedSong">{{ selectedSong.title }} <div style="color: #9a9a9a;">{{ selectedSong.album }}</div></div>
+          </div>
           <div class="controls">
             <v-icon @click="replay()">{{ AVIcons.replay }}</v-icon>
             <v-icon :class="{disabled: !shuffle}" @click="toggleShuffle">{{ AVIcons.shuffle }}</v-icon>
-            <v-icon @click="replay(5)">{{ AVIcons.fastRewind }}</v-icon>
+            <!-- <v-icon @click="replay(5)">{{ AVIcons.fastRewind }}</v-icon> -->
             <v-icon @click="previousSong">{{ AVIcons.skipPrevious }}</v-icon>
             <v-icon @click="playPauseAudio">{{ Icons[IconSelector] }}</v-icon>
             <v-icon @click="nextSong">{{ AVIcons.skipNext }}</v-icon>
-            <v-icon @click="replay(-5)">{{ AVIcons.fastForward }}</v-icon>
+            <!-- <v-icon @click="replay(-5)">{{ AVIcons.fastForward }}</v-icon> -->
             <v-icon @click="changePlayMode">{{ playModeIcons[playModeIconSelector] }}</v-icon>
             <div class="inline-block" 
               @mouseover="showVolumebar"
@@ -53,6 +59,8 @@
 
 <script>
 import { AVIcons, mutationTypes, KeyPress } from '../assets/js/constants';
+import CommonFunctianalities from '../assets/js/commonFunctionalities.js';
+const _ = require('lodash');
 
 export default {
   data() {
@@ -102,6 +110,16 @@ export default {
     },
     volumeIconsSelector: function() {
       return Math.ceil(this.audioVolume * (this.volumeIcons.length - 1));
+    },
+    selectedSongAlbumImage: function() {
+      let song = this.$store.state.selectedSong;
+      if(song) {
+        let album = _.find(this.$store.state.albums, {title: song.album});
+        return album.cover;
+      }
+    },
+    selectedSong: function() {
+      return this.$store.state.selectedSong;
     }
     // currentTime: function() {
     //   return this.getReadableTime(this.$store.state.audioPlayer.currentTime);
@@ -122,8 +140,10 @@ export default {
       this.alertIconSelectorMute = (this.alertIconSelectorMute + 1) % 2;
       this.popAlert(this.alertIconSelectorMute);
     },
+    getReadableTime: new CommonFunctianalities().getReadableTime,
     addKeypressListenerToWindow(event) {
       console.log(event);
+      event.preventDefault();
       let keyCode = event.which || event.keyCode;
       console.log(keyCode);
       switch(keyCode) {
@@ -139,25 +159,6 @@ export default {
           this.playPauseAudio();
       }
       
-    },
-    getReadableTime(duration) {
-      let seconds = duration, minutes = 0, hours = 0;
-      while(seconds > 60) {
-          minutes ++;
-          seconds -= 60;
-      }
-      while(minutes > 60) {
-          hours ++;
-          minutes -= 60;
-      }
-
-      seconds = Math.round(seconds);
-
-      return ( 
-      `${hours ? hours + ':' : ''}` +
-      `${minutes ? (hours ? (minutes >= 10 ? minutes : '0' + minutes) : minutes) : '0'}:` +
-      `${seconds ? (seconds > 9 ? seconds: '0' + seconds) : '00'}`
-      );
     },
     getOffsetX: function(event) {
       // console.log(event);
@@ -327,6 +328,18 @@ export default {
   opacity: 0;
 }
 
+.controlsContainer {
+  grid-template-columns: 35% 60%;
+  grid-template-rows: 1fr;
+  min-width: 0;
+  min-height: 0;
+}
+
+.controlsContainer > div {
+  min-width: 0;
+  min-height: 0;
+}
+
 .full-opacity {
   opacity: 1;
 }
@@ -353,6 +366,35 @@ export default {
   cursor: pointer;
 }
 
+.selectedSong {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageContainer {
+  width: 24%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+}
+
+.selectedSongInfo {
+  flex: 1 1 auto;
+  color: #dadada;
+  font-size: 0.8rem;
+  text-align: start;
+  padding-left: 1rem;
+  padding-top: 0.4rem;
+  box-sizing: border-box;
+  align-self: flex-start;
+}
+
+/* .imageContainer > img {
+  max-width: 100%;
+  max-height: 100%;
+} */
+
 .seekbarTip {
   float: right;
   position: relative;
@@ -371,7 +413,7 @@ export default {
 } */
 
 .controls {
-  justify-self: center;
+  justify-self: self-start;
 }
 
 .controls  .v-icon {

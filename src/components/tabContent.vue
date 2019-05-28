@@ -14,6 +14,11 @@
             <album-container></album-container>
           </v-card>
         </v-tab-item>
+        <v-tab-item class="full-height overflow">
+          <v-card flat color="transparent" dark class="full-height">
+            <artist-container></artist-container>
+          </v-card>
+        </v-tab-item>
       </v-tabs-items>
     </div>
 </template>
@@ -21,6 +26,7 @@
 <script>
 import songsContainer from './songsContainer.vue';
 import albumContainer from './albumContainer.vue';
+import artistContainer from './artistContainer.vue';
 
 
 import {stateProps, mutationTypes} from '../assets/js/constants';
@@ -29,7 +35,8 @@ import {stateProps, mutationTypes} from '../assets/js/constants';
 export default {
     components: {
         songsContainer,
-        albumContainer
+        albumContainer,
+        artistContainer
     },
     data: function() {
         return {

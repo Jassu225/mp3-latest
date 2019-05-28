@@ -20,6 +20,9 @@ const mutationTypes = {
     CREATE_AUDIO_PLAYER_REFERENCE: 'createAudioPlayerReference',
     CREATE_MUSIC_CONTROLS_REFERENCE: 'createMusicControlsReference',
     SELECT_SONG: 'selectSong',
+    SELECT_ALBUM: 'selectAlbum',
+    SELECT_ARTIST: 'selectArtist',
+    SET_PLAYLIST: 'setPlaylist',
     // Music Controls' Actions
     // -------------------------------------------------------------------
     SELECT_SONG_BASED_ON_PLAYMODE: 'selectNextSongBasedOnPlayMode',
@@ -38,7 +41,9 @@ const mutationTypes = {
     // key controls
     MUTE_AUDIO: 'muteAudio',
     // used to update songs in store after converting them to instances of Song class
-    SET_FORMATTED_SONGS: 'setFormattedSongs'
+    SET_FORMATTED_SONGS: 'setFormattedSongs',
+    SET_FORMATTED_ALBUMS: 'setFormattedAlbums',
+    SET_FORMATTED_ARTISTS: 'setFormattedArtists'
 }
 
 const actionTypes = {
@@ -47,7 +52,13 @@ const actionTypes = {
     GET_ALBUMS: 'getAlbums',
     GET_ALBUMS_FROM_SERVER: 'getaAlbumsFromServer',
     GET_SONGS_FROM_DB: 'getSongsFromDB',
-    GET_SONGS_FROM_SYSTEM: 'getSongsFromSystem'
+    GET_SONGS_FROM_SYSTEM: 'getSongsFromSystem',
+    GET_ALBUMS_FROM_DB: 'getAlbumsFromDB',
+    GET_ALBUMS_FROM_SYSTEM: 'getAlbumsFromSystem',
+    GET_ARTISTS_FROM_DB: 'getArtistsFromDB',
+    FORMAT_SONGS: 'formatSongs',
+    FORMAT_ALBUMS: 'formatAlbums',
+    FORMAT_ARTISTS: 'formatArtists'
 }
 
 const AVIcons = {
@@ -105,6 +116,12 @@ const KeyPress  = {
     L: 76
 }
 
+const images = {
+    defaultSongCover: '/dist/defaultSongCover.png', 
+    defaultAlbumCover: '/dist/defaultAlbumCover.png',
+    defaultArtistCover: '/dist/defaultArtistCover.png'
+}
+
 export {
     sideNavContent,
     mutationTypes,
@@ -113,5 +130,6 @@ export {
     playModes,
     stateProps,
     KeyPress,
-    dirs
+    dirs,
+    images
 }

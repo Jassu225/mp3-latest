@@ -1,20 +1,20 @@
 <template>
     <div class="album">
-        <div class="albumCoverContainer" ref="imageContainer">
-            <img :alt="album.title" :src="album.cover" class="albumCover" ref="image"/>
+        <div class="albumCoverContainer">
+            <img :alt="artist.title" :src="artist.cover == images.defaultArtistCover ? defaultArtistCover : artist.cover" class="albumCover"/>
             <div class="hoverContent">
                 <div class="infoHolder grid">
-                    <div @click="album.play()"><material-icon class="action-icon playIcon">play_arrow</material-icon></div>
+                    <div @click="artist.play()"><material-icon class="action-icon playIcon">play_arrow</material-icon></div>
                     <material-icon class="action-icon addIcon">add</material-icon>
                     <div class="additionalContent">
                         <span style="color: #b7babb;font-weight: 900;">Time - </span>
-                        <span>{{ getReadableTime(album.duration,"text") }}</span>
+                        <span>{{ getReadableTime(artist.duration,"text") }}</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="albumTitle" :title="album.title">{{ album.title }}</div>
-        <div class="artists" :title="album.artists">{{ album.artists.join(", ") }}</div>
+        <div class="albumTitle" :title="artist.title">{{ artist.title }}</div>
+        <!-- <div class="artists" :title="album.artists">{{ album.artists.join(", ") }}</div> -->
     </div>
 </template>
 
@@ -22,17 +22,20 @@
 
 import materialIcon from './generic/materialIcon.vue';
 import CommonFunctianalities from '../assets/js/commonFunctionalities.js';
-
-let commonFunctionalities = new CommonFunctianalities();
+import { images } from '../assets/js/constants.js';
+import defaultArtistCover from '../assets/images/artistDefaultCover.png';
 
 export default {
-    props: ['albumIndex', 'album'],
+    props: ['artistIndex', 'artist'],
     components: { materialIcon },
-    methods: {
-        getReadableTime: commonFunctionalities.getReadableTime
+    data: function() {
+        return {
+            images,
+            defaultArtistCover
+        };
     },
-    mounted: function() {
-        commonFunctionalities.fitImageToContainer(this.$refs.imageContainer, this.$refs.image);
+    methods: {
+        getReadableTime: new CommonFunctianalities().getReadableTime
     }
 }
 </script>
@@ -51,6 +54,8 @@ export default {
     justify-items: center;
     position: relative;
     background-color: #696868;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
 .playIcon {

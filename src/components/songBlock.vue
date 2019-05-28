@@ -4,7 +4,6 @@
             {{ song.title }}
         </div>
         <div class="song-action" @click="song.playOrPause()">
-            <!-- <v-icon title="play">{{ Icons[IconSelector] }}</v-icon> -->
             <material-icon title="play">{{ Icons[IconSelector] }}</material-icon>
         </div>
         <div class="song-action">
