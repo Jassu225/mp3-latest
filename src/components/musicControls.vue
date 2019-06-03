@@ -326,6 +326,7 @@ export default {
   right: 15%;
   background-color: rgba(100, 100, 100, 0.4) !important;
   opacity: 0;
+  top: calc(-100vh + 8rem);
 }
 
 .controlsContainer {
@@ -345,6 +346,8 @@ export default {
 }
 .footer {
   grid-template-rows: 2rem 1fr;
+  position: relative;
+  z-index: 100;
 }
 
 .seekbarGrid {
@@ -367,13 +370,14 @@ export default {
 }
 
 .selectedSong {
-  display: flex;
+  display: grid;
+  grid-template-columns: 24% 1fr;
   align-items: center;
   justify-content: center;
 }
 
 .imageContainer {
-  width: 24%;
+  /* width: 24%; */
   height: 100%;
   background-size: contain;
   background-position: center;

@@ -43,7 +43,9 @@ const mutationTypes = {
     // used to update songs in store after converting them to instances of Song class
     SET_FORMATTED_SONGS: 'setFormattedSongs',
     SET_FORMATTED_ALBUMS: 'setFormattedAlbums',
-    SET_FORMATTED_ARTISTS: 'setFormattedArtists'
+    SET_FORMATTED_ARTISTS: 'setFormattedArtists',
+    // new view
+    SHOW_ALBUM_VIEW: 'showAlbumView'
 }
 
 const actionTypes = {

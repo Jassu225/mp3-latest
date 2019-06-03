@@ -31,6 +31,7 @@ const store = new Vuex.Store({
       selectedSong: null,
       selectedAlbum: null,
       selectedArtist: null,
+      selectedRecord: null, // for album / artist view
       playlists,
       // Below prop has been removed and added to playlists
       // seemed unnecessary to declare here
@@ -39,7 +40,9 @@ const store = new Vuex.Store({
       musicControls: null,
       audioVolumes: [0, 1],
       // must not change
-      audioVolumesSelector: 1
+      audioVolumesSelector: 1,
+      // views
+      showAlbumView: false
     },
     mutations: {
       // to toggle side-navbar
@@ -95,21 +98,9 @@ const store = new Vuex.Store({
       [mutationTypes.SELECT_SONG_BASED_ON_PLAYMODE] (state, payload) {
         // make current selection previous
         state.previousSelection = state.selectedSong;
-
-        // let SongIndex = null;
-
         // get next song index from playlists
         if(payload.next)   playlists.selectedPlaylist.playNextSong(payload.autoplay, state);
         else if(payload.previous)  playlists.selectedPlaylist.playPreviousSong(payload.autoplay, state);
-
-        // if SongIndex is null, stop player
-        // if(SongIndex == null) return;
-        // // make new Selection
-        // state.selectedSong = state.songs[SongIndex];
-        // // load Audio player with new selection source
-        // state.selectedSong.load();
-        // // play new Song
-        // state.selectedSong.playOrPause();
       },
       [mutationTypes.TOGGLE_SHUFFLE] (state) {
         playlists.selectedPlaylist.toggleShuffle();
@@ -152,6 +143,11 @@ const store = new Vuex.Store({
       [mutationTypes.SET_PLAYLIST] (state, {payload}) {
         let newPlaylist = payload;
         state.playlists.selectedPlaylist = state.playlists.createDynamicList(newPlaylist);
+      },
+      [mutationTypes.SHOW_ALBUM_VIEW] (state, {payload}) {
+        state.showAlbumView = payload.showAlbumView;
+        if(payload.showAlbumView)
+          state.selectedRecord = payload.record;
       }
     },
     actions: {

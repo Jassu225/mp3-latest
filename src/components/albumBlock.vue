@@ -1,8 +1,8 @@
 <template>
     <div class="album">
-        <div class="albumCoverContainer" ref="imageContainer">
-            <img :alt="album.title" :src="album.cover" class="albumCover" ref="image"/>
-            <div class="hoverContent">
+        <div class="albumCoverContainer" :style="{'background-image': 'url(' + album.cover +')'}">
+            <!-- <img :alt="album.title" :src="album.cover" class="albumCover"/> -->
+            <div class="hoverContent" @click="showAlbumView">
                 <div class="infoHolder grid">
                     <div @click="album.play()"><material-icon class="action-icon playIcon">play_arrow</material-icon></div>
                     <material-icon class="action-icon addIcon">add</material-icon>
@@ -22,17 +22,25 @@
 
 import materialIcon from './generic/materialIcon.vue';
 import CommonFunctianalities from '../assets/js/commonFunctionalities.js';
-
-let commonFunctionalities = new CommonFunctianalities();
+import { mutationTypes } from '../assets/js/constants.js';
 
 export default {
     props: ['albumIndex', 'album'],
     components: { materialIcon },
     methods: {
-        getReadableTime: commonFunctionalities.getReadableTime
-    },
-    mounted: function() {
-        commonFunctionalities.fitImageToContainer(this.$refs.imageContainer, this.$refs.image);
+        getReadableTime: new CommonFunctianalities().getReadableTime,
+        showAlbumView: function (event) {
+            if(event.target == event.currentTarget) {
+                console.log('album View show');
+                this.$store.commit({
+                    type: mutationTypes.SHOW_ALBUM_VIEW,
+                    payload: {
+                        showAlbumView: true,
+                        record: this.album
+                    }
+                });
+            }
+        }
     }
 }
 </script>
@@ -46,11 +54,13 @@ export default {
 .albumCoverContainer {
     width: 100%;
     height: 75%;
-    display: flex;
-    align-items: center;
-    justify-items: center;
-    position: relative;
+    /* display: flex; */
+    /* align-items: center; */
+    /* justify-items: center; */
+    /* position: relative; */
     background-color: #696868;
+    background-position: center;
+    background-size: contain;
 }
 
 .playIcon {
@@ -78,7 +88,7 @@ export default {
 }
 
 .hoverContent {
-    position: absolute;
+    /* position: absolute; */
     opacity: 0;
     width: 100%;
     height: 100%;
@@ -100,11 +110,6 @@ export default {
 
 .hoverContent:hover {
     opacity: 1;
-}
-
-.albumCover {
-    max-width: 100%;
-    max-height: 100%;
 }
 
 .albumTitle, .artists {

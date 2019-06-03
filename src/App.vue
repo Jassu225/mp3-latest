@@ -1,18 +1,21 @@
 <template>
-  <v-app>
+  <v-app style="overflow: hidden;">
     <side-nav 
         :sideNavbar="sideNavbar"
         :navigateToFileUpload="navigateToFileUpload"
         :navigateToUploadProgress="navigateToUploadProgress"
         :uploadCount="uploadingFiles.length"
     ></side-nav>
+    <album-view
+      :record="specificRecord"
+    ></album-view>
     <div class="root-grid grid full-height">
       <navbar :config="config"></navbar>
       <div class="position-relative">
         <div class="overflow position-absolute full-width full-height">
           <tab-content :config="config" class="full-height"></tab-content>
         </div>
-        <div v-if="!Tabs" class="position-absolute full-width full-height">
+        <!-- <div v-if="!Tabs" class="position-absolute full-width full-height">
           <router-view 
             name="fileUpload" 
             :config="config"
@@ -26,7 +29,7 @@
             name="uploadProgress"
             :uploadingFiles="uploadingFiles"
           ></router-view>
-        </div>
+        </div> -->
       </div>
       <video 
         ref="audioPlayer" 
@@ -53,7 +56,9 @@
 import navbar from './components/navbar.vue';
 import tabContent from './components/tabContent.vue';
 import musicControls from './components/musicControls.vue';
+import albumView from './components/albumView.vue';
 import sideNav from './components/sideNav.vue';
+
 import {actionTypes, mutationTypes, stateProps} from './assets/js/constants';
 import config from './config';
 import urls from './router/urls';
@@ -62,7 +67,7 @@ const INDEX_NOT_FOUND = -1;
 
 export default {
   components: {
-    navbar, musicControls, tabContent, sideNav
+    navbar, musicControls, tabContent, sideNav, albumView
   },
   data () {
     return {
@@ -94,6 +99,11 @@ export default {
                 newValue
             });
         }
+    },
+    specificRecord: {
+      get: function() {
+        return this.$store.state.selectedRecord;
+      }
     }
   },
   mounted: function() {
