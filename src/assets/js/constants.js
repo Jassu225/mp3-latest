@@ -38,6 +38,7 @@ const mutationTypes = {
     SET_PLAY_MODE: 'setPlaymode',
     // play Next Song action
     PLAY_NEXT: 'playNext',
+    ADD_TO_QUEUE: 'addToQueue',
     // key controls
     MUTE_AUDIO: 'muteAudio',
     // used to update songs in store after converting them to instances of Song class

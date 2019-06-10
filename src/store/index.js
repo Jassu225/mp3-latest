@@ -116,7 +116,10 @@ const store = new Vuex.Store({
       // Song Actions
       // ---------------------------------------------------------------
       [mutationTypes.PLAY_NEXT] (state, payload) {
-        
+        playlists.selectedPlaylist.playNext(payload.song);
+      },
+      [mutationTypes.ADD_TO_QUEUE] (state, payload) {
+        playlists.selectedPlaylist.queue(payload.song);
       },
       // -----------------------------------------------------------------
       // key controls

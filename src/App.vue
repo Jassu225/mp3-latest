@@ -31,7 +31,7 @@
           ></router-view>
         </div> -->
       </div>
-      <video 
+      <audio 
         ref="audioPlayer" 
         class="hidden"
         @loadeddata="setDuration"
@@ -40,7 +40,7 @@
         @play="audioPlaying"
         @timeupdate="updateSeekbarWidthAndTime"
         @volumechange="audioVolumeChanged"
-      ></video>
+      ></audio>
       <music-controls 
         :seekablebarWidth="seekablebarWidth"
         :updateAudioTime="updateAudioTime"
@@ -275,6 +275,7 @@ li {
 a {
   color: #42b983;
 }
+
 .hidden{
   display: none;
 }
@@ -298,5 +299,10 @@ a {
 
 .position-absolute {
   position: absolute;
+}
+
+.songs-container .contentContainer {
+  /* scroll-behavior: smooth; */
+  scroll-snap-type: y mandatory;
 }
 </style>

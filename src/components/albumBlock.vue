@@ -1,6 +1,6 @@
 <template>
     <div class="album">
-        <div class="albumCoverContainer" :style="{'background-image': 'url(' + album.cover +')'}">
+        <div class="albumCoverContainer" :style="{'background-image': 'url(' + (album.cover == images.defaultAlbumCover ? defaultAlbumCover : album.cover) +')'}">
             <!-- <img :alt="album.title" :src="album.cover" class="albumCover"/> -->
             <div class="hoverContent" @click="showAlbumView">
                 <div class="infoHolder grid">
@@ -22,16 +22,23 @@
 
 import materialIcon from './generic/materialIcon.vue';
 import CommonFunctianalities from '../assets/js/commonFunctionalities.js';
-import { mutationTypes } from '../assets/js/constants.js';
+import { mutationTypes, images } from '../assets/js/constants.js';
+import defaultAlbumCover from '../assets/images/albumDefaultCover.png';
 
 export default {
     props: ['albumIndex', 'album'],
     components: { materialIcon },
+    data: function() {
+        return {
+            images,
+            defaultAlbumCover
+        };
+    },
     methods: {
         getReadableTime: new CommonFunctianalities().getReadableTime,
         showAlbumView: function (event) {
             if(event.target == event.currentTarget) {
-                console.log('album View show');
+                // console.log('album View show');
                 this.$store.commit({
                     type: mutationTypes.SHOW_ALBUM_VIEW,
                     payload: {
@@ -58,15 +65,18 @@ export default {
     /* align-items: center; */
     /* justify-items: center; */
     /* position: relative; */
-    background-color: #696868;
+    /* background-color: #696868; */
     background-position: center;
     background-size: contain;
+    border-radius: 6px;
+    overflow: hidden;
 }
 
 .playIcon {
     grid-area: playIcon;
     right: -40px;
     transition: right 0.26s ease-in-out, transform 0.1s ease-in-out;
+    will-change: right, transform;
 }
 
 .playIcon:hover, .addIcon:hover {
@@ -77,14 +87,14 @@ export default {
     grid-area: addIcon;
     left: -40px;
     transition: left 0.26s ease-in-out, transform 0.1s ease-in-out;
+    will-change: left, transform;
 }
 
 .additionalContent {
     grid-area: additionalContent;
     margin-top: 5px;
-    text-align: start;
-    width: 78%;
-    margin-left: 4%;
+    text-align: center;
+    width: 100%;
 }
 
 .hoverContent {
@@ -93,6 +103,7 @@ export default {
     width: 100%;
     height: 100%;
     transition: opacity 0.2s ease-in-out;
+    will-change: opacity;
     background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;

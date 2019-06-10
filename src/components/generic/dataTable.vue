@@ -14,7 +14,7 @@
                 </div>
             </div>
         </slot>
-        <div class="overflow">
+        <div class="overflow contentContainer">
             <slot v-for="(item, index) in items.slice(start, end)" name="content" :item="item" :index="index">
             </slot>
         </div>

@@ -58,9 +58,10 @@
 </template>
 
 <script>
-import { AVIcons, mutationTypes, KeyPress } from '../assets/js/constants';
+import { AVIcons, mutationTypes, KeyPress, images } from '../assets/js/constants';
 import CommonFunctianalities from '../assets/js/commonFunctionalities.js';
 const _ = require('lodash');
+import defaultSongCover from '../assets/images/defaultSongCover.png';
 
 export default {
   data() {
@@ -115,7 +116,7 @@ export default {
       let song = this.$store.state.selectedSong;
       if(song) {
         let album = _.find(this.$store.state.albums, {title: song.album});
-        return album.cover;
+        return album.cover == images.defaultAlbumCover ? defaultSongCover : album.cover;
       }
     },
     selectedSong: function() {

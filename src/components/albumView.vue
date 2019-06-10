@@ -6,19 +6,20 @@
             </div>
             <div class="recordInfo">
                 <div class="image" 
-                    :style="{'background-image': 'url(' + (record ? record.cover:'') + ')'}"
+                    :style="{'background-image': 'url(' + (record ? (record.cover == images.defaultAlbumCover ? defaultAlbumCover : (record.cover == images.defaultArtistCover ? defaultArtistCover : record.cover)) :'') + ')'}"
                     :class="{show: show}"
                 ></div>
                 <div style="min-width:0;min-height:0;">
                     <div class="data" :class="{show: show}">
                         <div>title: {{ record ? record.title : "" }}</div>
-                        <div v-if="isAlbum">year: {{ record ? record.year : "" }}</div>
+                        <div v-if="isAlbum()">year: {{ record ? record.year : "" }}</div>
                         <div>duration: {{ record ? getReadableTime(record.duration,"text") : "" }}</div>
-                        <div v-if="isAlbum">artists: {{ record ? record.artists.join(", ") : "" }}</div>
+                        <div v-if="isAlbum()">artists: {{ record && record.artists ? record.artists.join(", ") : "" }}</div>
                     </div>
                 </div>
             </div>
-            <div v-if="songs.length" class="songs-container fullWidth fullHeight" :class="{show: show}">
+            <div v-if="songs.length" class="songs-container fullWidth fullHeight PEN"
+            :class="{show: show}" @transitionend="enablePointerEvents">
                 <song-block 
                     v-for="(song, index) in songs"
                     :song="song"
@@ -36,7 +37,9 @@
 import materialIcon from './generic/materialIcon.vue';
 import songBlock from './songBlock.vue';
 
-import { mutationTypes } from '../assets/js/constants.js';
+import defaultArtistCover from '../assets/images/artistDefaultCover.png';
+import defaultAlbumCover from '../assets/images/albumDefaultCover.png';
+import { mutationTypes, images } from '../assets/js/constants.js';
 import CommonFunctianalities from '../assets/js/commonFunctionalities.js';
 const _ = require("lodash");
 
@@ -45,7 +48,10 @@ export default {
     components: { materialIcon, songBlock },
     data: function() {
         return {
-            show: false 
+            show: false,
+            defaultArtistCover,
+            defaultAlbumCover,
+            images
         };
     },
     computed: {
@@ -81,8 +87,11 @@ export default {
             if(event.target == event.currentTarget)
                 this.show = !this.show;
         },
+        enablePointerEvents: function() {
+            event.target.classList.remove("PEN");
+        },
         isAlbum: function() {
-            return this.record.constructor.name == "Album";
+            return this.record && this.record.constructor.name == "Album";
         },
         getReadableTime: new CommonFunctianalities().getReadableTime,
         isPaused() {
@@ -105,6 +114,7 @@ export default {
     position: absolute;
     top: calc(100% - 6rem);
     transition: top 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    will-change: top; /* notifies the browser that this prop will be animated so that browser may increase the performance */
     width: 100%;
     height: calc(100% - 6rem);
     z-index: 10;
@@ -150,11 +160,13 @@ export default {
     background-size: contain;
     opacity: 0;
     transition: 0.8s opacity 0.1s ease-out;
+    will-change: opacity;
 }
 
 .data {
     width: 85%;
     transition: 0.36s width 0.1s ease-out, 0.36s opacity 0.15s ease-in;
+    will-change: width, opacity;
     float: right;
     text-align: start;
     padding-left: 0.8rem;
@@ -180,7 +192,15 @@ export default {
     margin-top: 2rem;
     opacity: 0;
     transition: 0.36s margin-top 0.1s ease-out, 0.36s opacity 0.15s ease-in-out;
+    will-change: margin-top, opacity;
     overflow: auto;
+    /* scroll-behavior: smooth; */
+    scroll-snap-type: y mandatory;
+}
+
+
+.PEN {
+    pointer-events: none;
 }
 
 .songs-container.show {

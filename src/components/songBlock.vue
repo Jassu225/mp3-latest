@@ -8,7 +8,7 @@
         </div>
         <div class="song-action">
             <v-menu 
-                open-on-hover
+                
                 transition="slide-y-transition"
                 bottom
             >
@@ -114,10 +114,13 @@ export default {
                 case addItems.PLAY_NEXT:
                     // console.log('play Next');
                     this.$store.commit( mutationTypes.PLAY_NEXT, {
-                        songID: this.song._id
+                        song: this.song
                     });
                     break;
                 case addItems.QUEUE:
+                    this.$store.commit( mutationTypes.ADD_TO_QUEUE, {
+                        song: this.song
+                    });
                     break;
                 case addItems.NEW_PLAYLIST:
                     break;
@@ -151,6 +154,8 @@ export default {
     color: #ddd;
     border-bottom: 0.1px solid #504d4d;
     /* margin: 0 1rem; */
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
 }
 
 .song-block:hover {
@@ -196,6 +201,6 @@ export default {
 
 .song-block.selected > .song-title{
     color: #e72c30;
-    font-weight: 500;
+    font-weight: 600;
 }
 </style>

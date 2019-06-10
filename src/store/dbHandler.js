@@ -113,6 +113,15 @@ function Fetch() {
     let formatWithArtistSchema = function (songs) {
         let artists = [];
         songs.forEach((song,index) => {
+            let songArtists = [];
+            song.artists.forEach((artist) => {
+                if(artist.includes(',')) {
+                    let artists = artist.split(',');
+                    songArtists = _.uniqBy(songArtists.concat(artists), el => el.toLowerCase());
+                } else
+                    songArtists.push(artist);
+            });
+            song.artists = songArtists;
             let someArtists = _.filter(artists,artist => song.artists.includes(artist.title));
             if(someArtists.length) {
                 for(let i = 0; i < someArtists.length; i++) {

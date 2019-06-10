@@ -2,7 +2,7 @@
     <div class="album">
         <div class="albumCoverContainer">
             <img :alt="artist.title" :src="artist.cover == images.defaultArtistCover ? defaultArtistCover : artist.cover" class="albumCover"/>
-            <div class="hoverContent">
+            <div class="hoverContent" @click="showAlbumView">
                 <div class="infoHolder grid">
                     <div @click="artist.play()"><material-icon class="action-icon playIcon">play_arrow</material-icon></div>
                     <material-icon class="action-icon addIcon">add</material-icon>
@@ -24,6 +24,7 @@ import materialIcon from './generic/materialIcon.vue';
 import CommonFunctianalities from '../assets/js/commonFunctionalities.js';
 import { images } from '../assets/js/constants.js';
 import defaultArtistCover from '../assets/images/artistDefaultCover.png';
+import { mutationTypes } from '../assets/js/constants.js';
 
 export default {
     props: ['artistIndex', 'artist'],
@@ -35,7 +36,18 @@ export default {
         };
     },
     methods: {
-        getReadableTime: new CommonFunctianalities().getReadableTime
+        getReadableTime: new CommonFunctianalities().getReadableTime,
+        showAlbumView: function (event) {
+            if(event.target == event.currentTarget) {
+                this.$store.commit({
+                    type: mutationTypes.SHOW_ALBUM_VIEW,
+                    payload: {
+                        showAlbumView: true,
+                        record: this.artist
+                    }
+                });
+            }
+        }
     }
 }
 </script>
@@ -62,6 +74,7 @@ export default {
     grid-area: playIcon;
     right: -40px;
     transition: right 0.26s ease-in-out, transform 0.1s ease-in-out;
+    will-change: right, transform;
 }
 
 .playIcon:hover, .addIcon:hover {
@@ -72,6 +85,7 @@ export default {
     grid-area: addIcon;
     left: -40px;
     transition: left 0.26s ease-in-out, transform 0.1s ease-in-out;
+    will-change: left, transform;
 }
 
 .additionalContent {
@@ -88,6 +102,7 @@ export default {
     width: 100%;
     height: 100%;
     transition: opacity 0.2s ease-in-out;
+    will-change: opacity;
     background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     align-items: center;

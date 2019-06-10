@@ -23,12 +23,15 @@ const _ = require('lodash');
 
     // region constructor
     // create a list
+    let listItem = function(index, id) {
+        return {
+            index,
+            songID: id
+        };
+    }
     songs = songs ? songs : [];
     songs.forEach((song, index) => {
-        list.push({
-            index,
-            songID: song._id
-        });
+        list.push(listItem(index, song._id));
     });
     // set list pointer to list
     selectedList = list;
@@ -161,6 +164,20 @@ const _ = require('lodash');
     }
     this.getCurrentSongIndex = function() {
         return selectedIndex;
+    }
+
+    let addToSongToList = function(song, index) {
+        let newSongIndex = songs.length;
+        songs.splice(newSongIndex, 0, song);
+        selectedList.splice(index, 0, listItem(newSongIndex, song._id));
+    }
+
+    this.playNext = function(song) {
+        addToSongToList(song, selectedIndex + 1);
+    }
+
+    this.queue = function(song) {
+        addToSongToList(song, selectedList.length);
     }
     // this.getNextSongIndex = function(autoplay) {
     //     // find nexSongIndex from selected playlist

@@ -2,19 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const TerserPlugin = require('terser-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: 'development',
   plugins: [
-    new VueLoaderPlugin(),
-    new CopyPlugin([
-      {
-        from: 'src/assets/images',
-        to: 'images',
-        test: /\.(png|jpg|gif|svg)$/,
-      }
-    ])
+    new VueLoaderPlugin()
   ],
   entry: ['@babel/polyfill','./src/main.js'],
   output: {
