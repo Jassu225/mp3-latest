@@ -23,7 +23,17 @@
       <v-divider></v-divider>
       <v-list class="pt-0" dense>
 
-        <v-list-tile
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>{{ items.home.icon }}</v-icon>
+          </v-list-tile-action>
+
+          <v-list-tile-content>
+              <v-list-tile-title>{{ items.home.title }}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <!-- <v-list-tile
           @click="navigateToFileUpload"
         >
           <v-list-tile-action>
@@ -33,7 +43,7 @@
           <v-list-tile-content>
             <v-list-tile-title>{{ items.upload.title }}</v-list-tile-title>
           </v-list-tile-content>
-        </v-list-tile>
+        </v-list-tile> -->
 
         <v-list-tile>
           <v-list-tile-action>
@@ -45,7 +55,7 @@
           </v-list-tile-content>
         </v-list-tile>
 
-        <v-list-tile @click="navigateToUploadProgress">
+        <!-- <v-list-tile @click="navigateToUploadProgress">
           <v-list-tile-action>
             <v-icon>{{ items.filesUploading.icon }}</v-icon>
           </v-list-tile-action>
@@ -56,7 +66,7 @@
                 <span class="uploadCount">{{uploadCount}}</span>
               </v-container>
           </v-list-tile-content>
-        </v-list-tile>
+        </v-list-tile> -->
 
         <v-list-tile>
           <v-list-tile-action>
@@ -68,7 +78,7 @@
           </v-list-tile-content>
         </v-list-tile>
         
-        <v-list-tile>
+        <v-list-tile @click="goToSettings">
           <v-list-tile-action>
             <v-icon>{{ items.settings.icon }}</v-icon>
           </v-list-tile-action>
@@ -96,7 +106,8 @@ export default {
       'sideNavbar',
       'navigateToFileUpload',
       'uploadCount',
-      'navigateToUploadProgress'
+      'navigateToUploadProgress',
+      'goToSettings'
     ],
     data () {
         return {
@@ -113,7 +124,7 @@ export default {
         }
     },
     methods: {
-        
+      
     }
 }
 </script>

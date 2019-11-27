@@ -11,8 +11,8 @@
                 ></div>
                 <div style="min-width:0;min-height:0;">
                     <div class="data" :class="{show: show}">
-                        <div>title: {{ record ? record.title : "" }}</div>
-                        <div v-if="isAlbum()">year: {{ record ? record.year : "" }}</div>
+                        <div class="ellipsis">title: <span class="album-title" :title="record ? record.title : ''">{{ record ? record.title : "" }}</span></div>
+                        <div v-if="isAlbum()">year: <span class="album-year">{{ record ? record.year : "" }}</span></div>
                         <div>duration: {{ record ? getReadableTime(record.duration,"text") : "" }}</div>
                         <div v-if="isAlbum()">artists: {{ record && record.artists ? record.artists.join(", ") : "" }}</div>
                     </div>
@@ -172,10 +172,8 @@ export default {
     padding-left: 0.8rem;
     box-sizing: border-box;
     opacity: 0;
-}
-
-.data {
     color: #cecece;
+    overflow: auto;
 }
 
 .data > div {
@@ -184,6 +182,12 @@ export default {
 
 .data.show {
     width: 100%;
+}
+
+.album-title {
+    color: whitesmoke;
+    font-weight: 700;
+    font-size: 1.2rem;
 }
 
 .songs-container {

@@ -13,7 +13,7 @@
                 </div>
             </div>
         </div>
-        <div class="albumTitle" :title="artist.title">{{ artist.title }}</div>
+        <div class="artistTitle" :title="artist.title">{{ artist.title }}</div>
         <!-- <div class="artists" :title="album.artists">{{ album.artists.join(", ") }}</div> -->
     </div>
 </template>
@@ -127,13 +127,13 @@ export default {
     max-height: 100%;
 }
 
-.albumTitle, .artists {
+.artistTitle, .artists {
     text-align: start;
 }
 
-.albumTitle {
-    display: flex;
-    align-items: center;
+.artistTitle {
+    height: 25%;
+    padding: 0.5rem;
     font-size: 13px;
 }
 

@@ -5,6 +5,7 @@
         :navigateToFileUpload="navigateToFileUpload"
         :navigateToUploadProgress="navigateToUploadProgress"
         :uploadCount="uploadingFiles.length"
+        :goToSettings="navigateToSettings"
     ></side-nav>
     <album-view
       :record="specificRecord"
@@ -15,8 +16,8 @@
         <div class="overflow position-absolute full-width full-height">
           <tab-content :config="config" class="full-height"></tab-content>
         </div>
-        <!-- <div v-if="!Tabs" class="position-absolute full-width full-height">
-          <router-view 
+        <div v-if="!Tabs" class="position-absolute full-width full-height">
+          <!-- <router-view 
             name="fileUpload" 
             :config="config"
             :uploadProgress="uploadProgress"
@@ -28,8 +29,11 @@
           <router-view
             name="uploadProgress"
             :uploadingFiles="uploadingFiles"
+          ></router-view> -->
+          <router-view
+            name="settings"
           ></router-view>
-        </div> -->
+        </div>
       </div>
       <audio 
         ref="audioPlayer" 
@@ -123,6 +127,9 @@ export default {
         this.$router.push(route);
         this.sideNavbar = false;
     },
+    navigateToSettings: function () {
+      this.navigateTo(urls.SETTINGS);
+    },
     navigateToUploadProgress: function() {
         this.navigateTo(urls.UPLOAD_PROGRESS);
     },
@@ -167,6 +174,7 @@ export default {
     removeFromUploadingFiles: function(fileName) {
         this.uploadingFiles.splice(this.getIndex(fileName), 1);
     },
+
     audioEnded() {
       // for setting play icon in song-block
       this.$store.state.selectedSong.ended();
@@ -253,7 +261,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  background-color: #5f5f56;
+  /* background-color: #5f5f56; */
   width: 100%;
   height: 100%;
 }
@@ -274,6 +282,16 @@ li {
 
 a {
   color: #42b983;
+}
+
+.application {
+  line-height: 1;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .hidden{

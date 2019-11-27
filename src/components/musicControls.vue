@@ -375,6 +375,8 @@ export default {
   grid-template-columns: 24% 1fr;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  padding-bottom: 0.2rem;
 }
 
 .imageContainer {

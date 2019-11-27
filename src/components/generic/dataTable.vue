@@ -15,13 +15,12 @@
             </div>
         </slot>
         <div class="overflow contentContainer">
-            <slot v-for="(item, index) in items.slice(start, end)" name="content" :item="item" :index="index">
-            </slot>
+            <slot v-for="(item, index) in items.slice(start, end)" name="content" :item="item" :index="index"></slot>
         </div>
         <div class="pagination flexContainer centerItemsVertically">
-            <material-icon style="flexBasis: 4rem" class="cursorPointer" :click="goToNextPage">arrow_right</material-icon>
-            <material-icon style="flexBasis: 4rem" class="cursorPointer" :click="goToPreviousPage">arrow_left</material-icon>
-            <div>Showing {{ rowText }}s {{ start + 1 }} to {{ end }} of {{items.length}}</div>
+            <material-icon style="flexBasis: 4rem" class="cursorPointer" :class="{disabled: currentPage === totalPages}" :click="goToNextPage">arrow_right</material-icon>
+            <material-icon style="flexBasis: 4rem" class="cursorPointer" :class="{disabled: currentPage === 1}" :click="goToPreviousPage">arrow_left</material-icon>
+            <div>Showing {{ rowText }}{{items.length > 1 ? "s" : ""}} {{ start + 1 }} to {{ end }} of {{items.length}}</div>
         </div>
     </div>
 </template>
@@ -30,6 +29,25 @@
 import materialIcon from './materialIcon.vue';
 export default {
     props: ["headers", "items", "rowsPerPageNumber", "rowText"],
+    props: {
+        headers: {
+            type: Array,
+            required: true
+        },
+        items: {
+            type: Array,
+            required: true
+        },
+        rowText: {
+            type: String,
+            required: true
+        },
+        rowsPerPageNumber: {
+            type: Number,
+            required: false,
+            default: 168
+        }
+    },
     components: {
         materialIcon
     },
@@ -37,18 +55,22 @@ export default {
         return {
             start: 0,
             currentPage: 1,
-            maxPerPage: parseInt(this.rowsPerPageNumber) >= this.items.length ? this.items.length: parseInt(this.rowsPerPageNumber)
+            totalPages: Math.ceil(this.items.length / this.rowsPerPageNumber),
+            maxPerPage: this.rowsPerPageNumber >= this.items.length ? this.items.length: this.rowsPerPageNumber
         };
     },
     methods: {
         goToNextPage: function() {
-            if(this.end < this.items.length)
+            if(this.end < this.items.length) {
                 this.start = this.end;
+                this.currentPage++;
+            }
         },
         goToPreviousPage: function() {
-            if(this.start > 0)
-                this.start = this.start - parseInt(this.rowsPerPageNumber);
-            console.log(this.start);
+            if(this.start > 0) {
+                this.start = this.start - this.rowsPerPageNumber;
+                this.currentPage--;
+            }
         }
     },
     computed: {

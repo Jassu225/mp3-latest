@@ -1,6 +1,7 @@
 const path = require("path");
 
 const sideNavContent = {
+    home: {title: "Home", icon: "home"},
     upload: { title: 'Upload', icon: 'file_upload' },
     profile: { title: 'Profile', icon: 'account_box'},
     filesUploading: { title: 'Files Uploading', icon: 'cloud_upload' },

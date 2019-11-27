@@ -13,8 +13,8 @@
                 </div>
             </div>
         </div>
-        <div class="albumTitle" :title="album.title">{{ album.title }}</div>
-        <div class="artists" :title="album.artists">{{ album.artists.join(", ") }}</div>
+        <div class="albumTitle ellipsis" :title="album.title">{{ album.title }}</div>
+        <div class="artists ellipsis" :title="album.artists">{{ album.artists.join(", ") }}</div>
     </div>
 </template>
 
@@ -24,6 +24,8 @@ import materialIcon from './generic/materialIcon.vue';
 import CommonFunctianalities from '../assets/js/commonFunctionalities.js';
 import { mutationTypes, images } from '../assets/js/constants.js';
 import defaultAlbumCover from '../assets/images/albumDefaultCover.png';
+
+let commonFunctionalities = new CommonFunctianalities();
 
 export default {
     props: ['albumIndex', 'album'],
@@ -35,7 +37,7 @@ export default {
         };
     },
     methods: {
-        getReadableTime: new CommonFunctianalities().getReadableTime,
+        getReadableTime: commonFunctionalities.getReadableTime,
         showAlbumView: function (event) {
             if(event.target == event.currentTarget) {
                 // console.log('album View show');
@@ -54,13 +56,13 @@ export default {
 
 <style scoped>
 .album {
-    height: 230px;
+    height: 210px;
     min-width: 0;
 }
 
 .albumCoverContainer {
     width: 100%;
-    height: 75%;
+    height: 84%;
     /* display: flex; */
     /* align-items: center; */
     /* justify-items: center; */
@@ -108,6 +110,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .infoHolder {
@@ -128,15 +131,13 @@ export default {
 }
 
 .albumTitle {
-    display: flex;
-    align-items: center;
+    height: 8%;
     font-size: 13px;
 }
 
 .artists {
     width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
+    height: 8%;
     font-size: 11px;
     color: #dcdcdc;
 }

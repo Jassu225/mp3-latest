@@ -34,6 +34,11 @@
     cursor: pointer;
 }
 
+.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
 .displayInlineBlock {
     display: inline-block;
 }
@@ -44,6 +49,11 @@
 
 .flexContainer.directionCol {
     flex-direction: column;
+}
+
+.flexContainer.centerItems {
+    align-items: center;
+    justify-content: center;
 }
 
 .flexContainer.centerItemsVertically {

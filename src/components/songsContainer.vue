@@ -4,7 +4,7 @@
             <data-table
                 :headers="songHeaders"
                 :items="songs"
-                rowsPerPageNumber="200"
+                :rowsPerPageNumber="5"
                 rowText="song"
             >
                 <song-block 
