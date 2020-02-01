@@ -1,6 +1,6 @@
 <template>
     <div class="full-height">
-        <div v-if="albums && albums.length" class="albums-container grid">
+        <div v-if="albums && albums.length" class="albums-container grid full-height">
             <album-block 
                 v-for="(album, index) in albums" 
                 :key="index" 
@@ -36,5 +36,12 @@ export default {
     padding: 10px;
     grid-gap: 15px;
     overflow: visible;
+    background-color: #111;
+}
+
+@media screen and (min-width: 1200px){
+    .albums-container {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
 }
 </style>

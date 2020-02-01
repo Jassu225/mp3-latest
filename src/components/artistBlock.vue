@@ -1,7 +1,7 @@
 <template>
     <div class="album">
-        <div class="albumCoverContainer">
-            <img :alt="artist.title" :src="artist.cover == images.defaultArtistCover ? defaultArtistCover : artist.cover" class="albumCover"/>
+        <div class="artistCoverContainer">
+            <img :alt="artist.title" :src="artist.cover == images.defaultArtistCover ? defaultArtistCover : artist.cover" class="artistCover"/>
             <div class="hoverContent" @click="showAlbumView">
                 <div class="infoHolder grid">
                     <div @click="artist.play()"><material-icon class="action-icon playIcon">play_arrow</material-icon></div>
@@ -58,7 +58,7 @@ export default {
     min-width: 0;
 }
 
-.albumCoverContainer {
+.artistCoverContainer {
     width: 100%;
     height: 75%;
     display: flex;
@@ -122,9 +122,10 @@ export default {
     opacity: 1;
 }
 
-.albumCover {
+.artistCover {
     max-width: 100%;
     max-height: 100%;
+    margin: auto;
 }
 
 .artistTitle, .artists {

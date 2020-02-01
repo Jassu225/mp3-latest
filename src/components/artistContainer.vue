@@ -1,6 +1,6 @@
 <template>
     <div class="full-height">
-        <div v-if="artists && artists.length" class="artists-container grid">
+        <div v-if="artists && artists.length" class="artists-container grid full-height">
             <artist-block 
                 v-for="(artist, index) in artists" 
                 :key="index" 
@@ -36,5 +36,12 @@ export default {
     padding: 10px;
     grid-gap: 15px;
     overflow: visible;
+    background-color: #111;
+}
+
+@media screen and (min-width: 1200px){
+    .artists-container {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    }
 }
 </style>
