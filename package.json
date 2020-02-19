@@ -16,7 +16,7 @@
     "build": "nuxt build && electron-builder"
   },
   "dependencies": {
-    "nuxt": "^1.4.0"
+    "nuxt": "^1.4.5"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",

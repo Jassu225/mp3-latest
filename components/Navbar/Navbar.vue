@@ -2,17 +2,12 @@
   <div>
     <v-toolbar class="navColor" dark tabs>
       <v-toolbar-side-icon @click.stop="sideNavbar = !sideNavbar"></v-toolbar-side-icon>
-
       <v-toolbar-title>Mp3 Player</v-toolbar-title>
-
       <v-spacer></v-spacer>
-
       <v-btn icon>
         <v-icon>search</v-icon>
       </v-btn>
-
       <more-menu></more-menu>
-
       <v-tabs
         slot="extension"
         v-model="tab"
@@ -20,7 +15,6 @@
         align-with-title
       >
         <v-tabs-slider color="white"></v-tabs-slider>
-
         <v-tab v-for="item in menuItems" :key="item" @click="Tabs = true;">
           {{ item }}
         </v-tab>
@@ -31,16 +25,17 @@
 
 <script>
 
-import moreMenu from './moreMenu.vue';
-import {stateProps, mutationTypes} from '../assets/js/constants';
+import moreMenu from './MoreMenu.vue';
+import { stateProps, mutationTypes } from '../../assets/data/constants';
+import config from '../../app-config/config';
 
 export default {
   components: {
     moreMenu,
   },
-  props: [
-    'config',
-  ],
+  // props: [
+  //   'config',
+  // ],
   data() {
     return {
       menuItems: [

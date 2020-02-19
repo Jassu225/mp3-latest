@@ -6,16 +6,16 @@
       :navigateToUploadProgress="navigateToUploadProgress"
       :uploadCount="uploadingFiles.length"
       :goToSettings="navigateToSettings"
-    ></side-nav>
-    <album-view :record="specificRecord"></album-view>
+    />
+    <album-view :record="specificRecord" />
     <div class="root-grid grid full-height">
-      <navbar :config="config"></navbar>
+      <navbar />
       <div class="position-relative">
         <div class="overflow position-absolute full-width full-height">
-          <tab-content :config="config" class="full-height"></tab-content>
+          <tabs class="full-height" />
         </div>
         <div v-if="!Tabs" class="position-absolute full-width full-height">
-          <router-view name="settings"></router-view>
+          <router-view name="settings" />
         </div>
       </div>
       <audio
@@ -27,27 +27,27 @@
         @play="audioPlaying"
         @timeupdate="updateSeekbarWidthAndTime"
         @volumechange="audioVolumeChanged"
-      ></audio>
+      />
       <music-controls
         :seekablebarWidth="seekablebarWidth"
         :updateAudioTime="updateAudioTime"
         :currentTime="currentTime"
         :duration="duration"
         :audioVolume="audioVolume"
-      ></music-controls>
+      />
     </div>
   </v-app>
 </template>
 
 <script>
-import navbar from '~/components/Navbar/Navbar.vue';
-import tabContent from '../components/tabContent.vue';
+import navbar from '../components/Navbar/Navbar.vue';
+import Tabs from '../components/Tabs/Tabs.vue';
 import musicControls from "../components/musicControls.vue";
 import albumView from "./components/albumView.vue";
 import sideNav from "./components/sideNav.vue";
 
 import { actionTypes, mutationTypes, stateProps } from "./assets/js/constants";
-import config from "./config";
+// import config from "./config";
 import urls from "./router/urls";
 
 const INDEX_NOT_FOUND = -1;
@@ -57,13 +57,13 @@ export default {
   components: {
     navbar,
     musicControls,
-    tabContent,
+    Tabs,
     sideNav,
     albumView,
   },
   data() {
     return {
-      config,
+      // config,
       seekablebarWidth: 0,
       currentTime: 0,
       duration: 0,

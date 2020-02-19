@@ -1,7 +1,7 @@
 /*
 **  Nuxt
 */
-const http =  require('http');
+const http = require('http');
 const { Nuxt, Builder } = require('nuxt');
 const config = require('./nuxt.config.js');
 config.rootDir = __dirname; // for electron-builder
